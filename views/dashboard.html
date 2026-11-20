@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - File Manager</title>
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 width=%2232%22 height=%2232%22><text y=%2224%22 font-size=%2224%22>📁</text></svg>">
+</head>
+<body>
+  <!-- Top Navigation Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="header-brand">
+        <span class="brand-icon">📁</span>
+        <h1>File Manager</h1>
+      </div>
+      <div class="header-user">
+        <span>Logged in as <strong id="username-display">user</strong></span>
+        <button type="button" id="logout-btn" class="btn btn-secondary">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="main-content">
+    <!-- Global Status Alert Banner -->
+    <div id="global-alert" class="alert hidden" role="alert"></div>
+
+    <!-- Section 1: Upload Card -->
+    <section class="card upload-card">
+      <div class="card-header">
+        <h2>Upload a file</h2>
+        <span class="badge">Max 5 MB</span>
+      </div>
+
+      <form id="upload-form" class="upload-form">
+        <div class="upload-dropzone" id="dropzone">
+          <input type="file" id="file-input" class="file-input" />
+          <div class="dropzone-content">
+            <span class="dropzone-icon">☁️</span>
+            <p class="dropzone-text">
+              <label for="file-input" class="file-browse-link">Choose a file</label> or drag & drop here
+            </p>
+            <p class="dropzone-hint">Supported: PNG, JPEG, GIF, WebP, PDF, TXT, CSV, DOCX, XLSX</p>
+          </div>
+        </div>
+
+        <!-- Selected File Preview -->
+        <div id="selected-file-preview" class="file-preview hidden">
+          <span class="file-icon">📄</span>
+          <div class="file-details">
+            <span id="preview-filename" class="preview-filename">filename.txt</span>
+            <span id="preview-filesize" class="preview-filesize muted">0 KB</span>
+          </div>
+          <button type="button" id="clear-file-btn" class="btn-icon" title="Clear selection">✕</button>
+        </div>
+
+        <!-- Custom Display Name for UI -->
+        <div class="form-group" style="margin-top: 16px;">
+          <label for="upload-display-name">
+            File Display Name <span class="muted font-normal">(optional — name seen on UI)</span>
+          </label>
+          <input 
+            type="text" 
+            id="upload-display-name" 
+            placeholder="e.g. Q4 Financial Report (defaults to original filename if blank)"
+            maxlength="255"
+          />
+        </div>
+
+        <div class="upload-actions">
+          <button type="submit" id="upload-btn" class="btn btn-primary" disabled>
+            <span class="btn-text">Upload File</span>
+            <span class="btn-spinner hidden"></span>
+          </button>
+        </div>
+
+        <div id="upload-message" class="message hidden" role="status"></div>
+      </form>
+    </section>
+
+    <!-- Section 2: Files Repository Card -->
+    <section class="card files-card">
+      <div class="card-header">
+        <h2>Your files</h2>
+        <button type="button" id="refresh-files-btn" class="btn btn-secondary btn-sm" title="Refresh files list">
+          🔄 Refresh
+        </button>
+      </div>
+
+      <div id="file-list-error" class="message error hidden" role="alert"></div>
+
+      <div id="file-list-loading" class="loading-state hidden">
+        <div class="spinner"></div>
+        <p class="muted">Loading files...</p>
+      </div>
+
+      <div id="file-list-empty" class="empty-state hidden">
+        <span class="empty-icon">📂</span>
+        <h3>No files uploaded yet</h3>
+        <p class="muted">Upload your first document or image using the form above.</p>
+      </div>
+
+      <div id="file-table-wrap" class="table-wrap hidden">
+        <table class="file-table">
+          <thead>
+            <tr>
+              <th>File / Name</th>
+              <th>Type</th>
+              <th>Size</th>
+              <th>Uploaded</th>
+              <th class="text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="file-table-body">
+            <!-- Dynamically populated rows -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal 1: Update File Dialog -->
+  <dialog id="update-modal" class="modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Update File</h3>
+        <button type="button" id="close-update-modal-btn" class="btn-icon" title="Close">✕</button>
+      </div>
+      <form id="update-form" class="update-form">
+        <input type="hidden" id="update-file-id" />
+        
+        <div class="form-group">
+          <label for="update-display-name">Display Name on UI</label>
+          <input 
+            type="text" 
+            id="update-display-name" 
+            name="display_name" 
+            required 
+            maxlength="255"
+            placeholder="e.g. Updated Project Plan"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="update-file-input">
+            Replace File <span class="muted font-normal">(optional — upload a file to replace the wrong upload)</span>
+          </label>
+          <input type="file" id="update-file-input" class="form-file-input" />
+          <small class="field-hint">Leave blank to keep existing file and update name only.</small>
+        </div>
+
+        <div id="update-current-info" class="file-preview">
+          <span class="file-icon" id="update-icon">📄</span>
+          <div class="file-details">
+            <span id="update-current-name" class="preview-filename"></span>
+            <span id="update-current-meta" class="preview-filesize muted"></span>
+          </div>
+        </div>
+
+        <div id="update-message" class="message error hidden" role="alert"></div>
+
+        <div class="modal-actions">
+          <button type="button" id="cancel-update-btn" class="btn btn-secondary">Cancel</button>
+          <button type="submit" id="save-update-btn" class="btn btn-primary">
+            <span class="btn-text">Save Changes</span>
+            <span class="btn-spinner hidden"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Modal 2: Delete Confirmation Dialog -->
+  <dialog id="delete-modal" class="modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Confirm Deletion</h3>
+      </div>
+      <p id="delete-modal-msg">Are you sure you want to delete this file? This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button type="button" id="cancel-delete-btn" class="btn btn-secondary">Cancel</button>
+        <button type="button" id="confirm-delete-btn" class="btn btn-danger">Delete Permanently</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Dedicated Dashboard Script -->
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

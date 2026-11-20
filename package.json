@@ -1,0 +1,19 @@
+{
+  "name": "file-manager-mvc",
+  "version": "1.0.0",
+  "description": "Full MVC Express + SQLite file manager with JWT auth and vanilla HTML/CSS/JS frontend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^13.2.0",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.5.0"
+  }
+}
