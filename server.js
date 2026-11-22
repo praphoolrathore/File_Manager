@@ -59,4 +59,7 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message: status >= 500 ? 'Server error' : err.message });
 });
 
-app.listen(PORT, () => console.log(`Application running on http://localhost:${PORT}`));
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`Application running on http://localhost:${PORT}`));
+}
+module.exports = app;
