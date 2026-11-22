@@ -31,6 +31,10 @@ const fixFilenameEncoding = (name) => Buffer.from(name, 'latin1').toString('utf8
 
 // Ids in the URL are strings; only accept plain positive integers.
 const parseId = (value) => (/^\d+$/.test(value) ? Number(value) : null);
+// ^	Beginning of string
+// \d	A digit from 0 to 9
+// +	One or more
+// $	End of string
 
 // POST /api/files
 const uploadFile = async (req, res) => {
@@ -52,13 +56,13 @@ const uploadFile = async (req, res) => {
       stored_name: req.file.filename,
       mime_type: req.file.mimetype,
       size: req.file.size,
-      path: path.posix.join('uploads', req.file.filename),
+      path: path.posix.join('uploads', req.file.filename),   //path.posix creates paths using forward slashes, regardless of whether your application runs on Windows or Linux.
       uploaded_by: req.user.id, // from the verified token, never from the request body
     });
     res.status(201).json(toPublic(saved));
   } catch (err) {
     // The file is already on disk but the database insert failed: don't leave an orphan.
-    await fs.promises.unlink(req.file.path).catch(() => {});
+    await fs.promises.unlink(req.file.path).catch(() => { });   //catch(() => { } is used to catch any errors that may occur while deleting the file. If an error occurs, it will be ignored and the function will continue to execute.
     throw err;
   }
 };
@@ -71,7 +75,7 @@ const listFiles = async (req, res) => {
 
 // GET /api/files/:id/download
 const downloadFile = async (req, res) => {
-  const id = parseId(req.params.id);
+  const id = parseId(req.params.id);  //parseId is used to parse the id from the request parameters.
   const file = id && File.findByIdAndUser(id, req.user.id);
   if (!file) return res.status(404).json({ message: 'File not found' });
 
@@ -100,7 +104,7 @@ const updateFile = async (req, res) => {
   const existingFile = id && File.findByIdAndUser(id, req.user.id);
   if (!existingFile) {
     if (req.file) {
-      await fs.promises.unlink(req.file.path).catch(() => {});
+      await fs.promises.unlink(req.file.path).catch(() => { });
     }
     return res.status(404).json({ message: 'File not found' });
   }
@@ -138,7 +142,7 @@ const updateFile = async (req, res) => {
   try {
     const updated = File.updateByIdAndUser(id, req.user.id, updateData);
     if (!updated) {
-      if (req.file) await fs.promises.unlink(req.file.path).catch(() => {});
+      if (req.file) await fs.promises.unlink(req.file.path).catch(() => { });
       return res.status(404).json({ message: 'File not found' });
     }
 
@@ -154,7 +158,7 @@ const updateFile = async (req, res) => {
     res.json(toPublic(updated));
   } catch (err) {
     if (req.file) {
-      await fs.promises.unlink(req.file.path).catch(() => {});
+      await fs.promises.unlink(req.file.path).catch(() => { });
     }
     throw err;
   }

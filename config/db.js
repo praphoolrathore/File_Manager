@@ -6,7 +6,7 @@ const Database = require('better-sqlite3');
 const dbPath = path.resolve(process.env.DB_PATH || './data/app.db');
 fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 
-const db = new Database(dbPath);
+const db = new Database(dbPath); // open sqlite database
 
 // SQLite does NOT enforce foreign keys unless this is switched on for each connection.
 db.pragma('foreign_keys = ON');
