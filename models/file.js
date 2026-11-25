@@ -29,6 +29,14 @@ const updateFileQuery = db.prepare(`
   WHERE id = @id AND uploaded_by = @uploaded_by
 `);
 
+// Allowed sort columns (whitelist — never interpolate raw user input into SQL)
+const SORT_COLUMNS = {
+  name:     'COALESCE(display_name, original_name)',
+  size:     'size',
+  type:     'mime_type',
+  uploaded: 'uploaded_at',
+};
+
 const File = {
   create(data) {
     const result = insertFile.run(data);
@@ -38,6 +46,31 @@ const File = {
   // SQL version of File.find({ uploaded_by: userId })
   findByUser(userId) {
     return selectByUser.all(userId);
+  },
+
+  // Supports optional query params: search, type, sort, order
+  // safe: sort column is whitelisted; search/type use ? placeholders
+  findByUserFiltered(userId, { search, type, sort, order } = {}) {
+    const sortCol = SORT_COLUMNS[sort] || 'uploaded_at';
+    const sortDir = order === 'asc' ? 'ASC' : 'DESC';
+
+    let sql = 'SELECT * FROM files WHERE uploaded_by = ?';
+    const params = [userId];
+
+    if (search && search.trim()) {
+      sql += ' AND (COALESCE(display_name, original_name) LIKE ? OR original_name LIKE ?)';
+      const like = `%${search.trim()}%`;
+      params.push(like, like);
+    }
+
+    if (type && type.trim()) {
+      sql += ' AND mime_type = ?';
+      params.push(type.trim());
+    }
+
+    sql += ` ORDER BY ${sortCol} ${sortDir}, id DESC`;
+
+    return db.prepare(sql).all(...params);
   },
 
   // Returns undefined if the file doesn't exist OR belongs to someone else.

@@ -68,8 +68,14 @@ const uploadFile = async (req, res) => {
 };
 
 // GET /api/files
+// Supported query params:
+//   ?search=photo          → filter by display/original name (case-insensitive LIKE)
+//   ?type=image/jpeg       → filter by exact MIME type
+//   ?sort=name|size|type|uploaded  → column to sort by (default: uploaded)
+//   ?order=asc|desc        → sort direction (default: desc)
 const listFiles = async (req, res) => {
-  const files = File.findByUser(req.user.id);
+  const { search, type, sort, order } = req.query;
+  const files = File.findByUserFiltered(req.user.id, { search, type, sort, order });
   res.json(files.map(toPublic));
 };
 

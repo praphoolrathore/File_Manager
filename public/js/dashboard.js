@@ -31,6 +31,10 @@ const uploadMessage = document.getElementById('upload-message');
 
 // File List Elements
 const refreshFilesBtn = document.getElementById('refresh-files-btn');
+const filterSearch    = document.getElementById('filter-search');
+const filterType      = document.getElementById('filter-type');
+const filterSort      = document.getElementById('filter-sort');
+const filterOrder     = document.getElementById('filter-order');
 const fileListError = document.getElementById('file-list-error');
 const fileListLoading = document.getElementById('file-list-loading');
 const fileListEmpty = document.getElementById('file-list-empty');
@@ -189,9 +193,23 @@ async function loadFiles() {
   fileListEmpty.classList.add('hidden');
   fileTableWrap.classList.add('hidden');
 
+  // Build URL with active query params
+  // e.g. /api/files?search=photo&type=image/jpeg&sort=size&order=desc
+  const params = new URLSearchParams();
+  const search = filterSearch?.value.trim();
+  const type   = filterType?.value;
+  const sort   = filterSort?.value;
+  const order  = filterOrder?.value;
+  if (search) params.set('search', search);
+  if (type)   params.set('type', type);
+  if (sort)   params.set('sort', sort);
+  if (order)  params.set('order', order);
+  const qs = params.toString();
+  const url = qs ? `/api/files?${qs}` : '/api/files';
+
   try {
-    // Direct fetch call to /api/files
-    const res = await fetch('/api/files', {
+    // Direct fetch call to /api/files (with optional query params)
+    const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -223,6 +241,16 @@ async function loadFiles() {
 }
 
 refreshFilesBtn.addEventListener('click', loadFiles);
+
+// Re-load files whenever any filter control changes
+let searchDebounceTimer = null;
+filterSearch.addEventListener('input', () => {
+  clearTimeout(searchDebounceTimer);
+  searchDebounceTimer = setTimeout(loadFiles, 350); // debounce: wait 350ms after typing
+});
+filterType.addEventListener('change', loadFiles);
+filterSort.addEventListener('change', loadFiles);
+filterOrder.addEventListener('change', loadFiles);
 
 function renderTable(files) {
   fileTableBody.innerHTML = '';

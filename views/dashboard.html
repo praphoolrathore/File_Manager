@@ -77,6 +77,39 @@
         <button type="button" id="refresh-files-btn" class="btn btn-outline btn-sm" title="Refresh">Refresh</button>
       </div>
 
+      <!-- Query Param Filters -->
+      <div class="filter-bar">
+        <input
+          type="search"
+          id="filter-search"
+          class="form-input filter-input"
+          placeholder="Search by name..."
+          maxlength="100"
+        />
+        <select id="filter-type" class="form-input filter-select">
+          <option value="">All types</option>
+          <option value="image/png">PNG</option>
+          <option value="image/jpeg">JPEG</option>
+          <option value="image/gif">GIF</option>
+          <option value="image/webp">WebP</option>
+          <option value="application/pdf">PDF</option>
+          <option value="text/plain">TXT</option>
+          <option value="text/csv">CSV</option>
+          <option value="application/vnd.openxmlformats-officedocument.wordprocessingml.document">DOCX</option>
+          <option value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">XLSX</option>
+        </select>
+        <select id="filter-sort" class="form-input filter-select">
+          <option value="uploaded">Sort: Date</option>
+          <option value="name">Sort: Name</option>
+          <option value="size">Sort: Size</option>
+          <option value="type">Sort: Type</option>
+        </select>
+        <select id="filter-order" class="form-input filter-select">
+          <option value="desc">Newest first</option>
+          <option value="asc">Oldest first</option>
+        </select>
+      </div>
+
       <div id="file-list-error" class="message error hidden" role="alert"></div>
 
       <div id="file-list-loading" class="loading-state hidden">

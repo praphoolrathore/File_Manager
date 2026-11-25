@@ -118,6 +118,28 @@ h4 { font-size: 16px; }
 /* ---------- Upload Form ---------- */
 .upload-form {
   display: flex;
+
+/* ---------- Filter Bar ---------- */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filter-input {
+  flex: 1 1 180px;
+  min-width: 140px;
+}
+
+.filter-select {
+  flex: 0 1 150px;
+  min-width: 110px;
+}
+
+/* ---------- Upload Form ---------- */
+.upload-form {
+  display: flex;
   flex-direction: column;
   gap: 14px;
 }
