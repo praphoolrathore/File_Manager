@@ -88,13 +88,7 @@ function formatBytes(bytes, decimals = 1) {
 }
 
 function getFileIcon(mimeType) {
-  if (!mimeType) return '📄';
-  if (mimeType.startsWith('image/')) return '🖼️';
-  if (mimeType === 'application/pdf') return '📕';
-  if (mimeType.includes('word') || mimeType.includes('document')) return '📘';
-  if (mimeType.includes('sheet') || mimeType.includes('excel') || mimeType === 'text/csv') return '📊';
-  if (mimeType === 'text/plain') return '📝';
-  return '📄';
+  return '';
 }
 
 function escapeHtml(str) {
@@ -253,7 +247,6 @@ function renderTable(files) {
     tr.innerHTML = `
       <td>
         <div class="file-item-name">
-          <span class="file-item-icon">${getFileIcon(file.mime_type)}</span>
           <div class="file-item-text">
             <span class="file-display-name">${escapeHtml(file.display_name || file.original_name)}</span>
             ${hasCustomName ? `<span class="file-original-name muted text-xs">Original: ${escapeHtml(file.original_name)}</span>` : ''}
@@ -264,15 +257,9 @@ function renderTable(files) {
       <td>${formatBytes(file.size)}</td>
       <td>${formattedDate}</td>
       <td class="actions-cell">
-        <button type="button" class="btn btn-secondary btn-sm action-update-btn" title="Update display name or replace file">
-          ✏ Update
-        </button>
-        <button type="button" class="btn btn-secondary btn-sm action-download-btn" title="Download file">
-          ⬇ Download
-        </button>
-        <button type="button" class="btn btn-danger btn-sm action-delete-btn" title="Delete file">
-          🗑 Delete
-        </button>
+        <button type="button" class="btn btn-secondary btn-sm action-update-btn" title="Update display name or replace file">Update</button>
+        <button type="button" class="btn btn-secondary btn-sm action-download-btn" title="Download file">Download</button>
+        <button type="button" class="btn btn-secondary btn-sm action-delete-btn" title="Delete file">Delete</button>
       </td>
     `;
 

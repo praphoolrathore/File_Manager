@@ -106,13 +106,13 @@ h4 { font-size: 16px; }
   border-bottom: 1px solid var(--border);
 }
 
-.badge {
-  font-size: 12px;
-  background: #f5f5f5;
+.badge, .max-size-hint {
+  font-size: 13px;
+  background: none;
   color: var(--text-muted);
-  padding: 3px 10px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
+  padding: 0;
+  border: none;
+  border-radius: 0;
 }
 
 /* ---------- Upload Form ---------- */
@@ -227,65 +227,52 @@ h4 { font-size: 16px; }
 
 .btn-clear:hover { color: var(--text); }
 
-/* ---------- Buttons (Clean Monochrome) ---------- */
+/* ---------- Buttons (Clean Flat Outline - No Shades) ---------- */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 18px;
+  padding: 8px 16px;
   font-size: 14px;
   font-weight: 500;
   border-radius: var(--radius);
   cursor: pointer;
-  border: 1px solid transparent;
+  border: 1px solid var(--border-strong);
+  background: #ffffff;
+  color: var(--text);
   text-decoration: none;
-  transition: all 0.15s ease;
+  box-shadow: none;
+  transition: background-color 0.1s ease;
 }
 
 .btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+  border-color: var(--border);
+  color: var(--text-muted);
 }
 
 .btn-sm {
-  padding: 6px 12px;
+  padding: 5px 12px;
   font-size: 13px;
 }
 
-/* Primary Button: Solid Black */
-.btn-primary {
-  background: var(--btn-bg);
-  color: var(--btn-text);
-  border-color: var(--btn-bg);
-}
-.btn-primary:hover:not(:disabled) {
-  background: var(--btn-hover);
-  border-color: var(--btn-hover);
-}
-
-/* Secondary & Outline Buttons: White with Dark Border */
+.btn-primary,
 .btn-secondary,
-.btn-outline {
+.btn-outline,
+.btn-danger {
   background: #ffffff;
   border: 1px solid var(--border-strong);
   color: var(--text);
-}
-.btn-secondary:hover:not(:disabled),
-.btn-outline:hover:not(:disabled) {
-  background: #f5f5f5;
-  border-color: var(--text);
+  box-shadow: none;
 }
 
-/* Danger Button: Subtle Dark Border */
-.btn-danger {
-  background: #ffffff;
-  border: 1px solid #737373;
-  color: var(--text);
-}
+.btn-primary:hover:not(:disabled),
+.btn-secondary:hover:not(:disabled),
+.btn-outline:hover:not(:disabled),
 .btn-danger:hover:not(:disabled) {
-  background: #171717;
-  color: #ffffff;
-  border-color: #171717;
+  background: #f5f5f5;
+  border-color: var(--text);
 }
 
 /* Spinner */

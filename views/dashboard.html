@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>File Manager</title>
   <link rel="stylesheet" href="/css/dashboard.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 width=%2232%22 height=%2232%22><text y=%2224%22 font-size=%2224%22>📁</text></svg>">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 width=%2232%22 height=%2232%22><text y=%2224%22 font-size=%2224%22>📁</text></svg>">
 </head>
+
 <body>
   <!-- Top Navigation Bar -->
   <header class="navbar">
     <div class="nav-content">
       <div class="brand">
-        <span class="brand-icon">📁</span>
         <strong>File Manager</strong>
       </div>
       <div class="nav-user">
@@ -31,7 +33,7 @@
     <section class="panel">
       <div class="panel-header">
         <h3>Upload File</h3>
-        <span class="badge">Max 5 MB</span>
+        <span class="max-size-hint text-muted">(Max 5 MB)</span>
       </div>
 
       <form id="upload-form" class="upload-form">
@@ -40,18 +42,18 @@
           <div class="dropzone-compact" id="dropzone">
             <input type="file" id="file-input" class="file-input" />
             <div class="dropzone-label">
-              <span class="drop-icon">📎</span>
               <span><label for="file-input" class="file-browse-link">Choose file</label> or drag here</span>
             </div>
           </div>
 
           <!-- File Display Name -->
           <div class="input-wrap">
-            <input type="text" id="upload-display-name" class="form-input" placeholder="Display name (optional)" maxlength="255" />
+            <input type="text" id="upload-display-name" class="form-input" placeholder="Display name (optional)"
+              maxlength="255" />
           </div>
 
           <!-- Upload Button -->
-          <button type="submit" id="upload-btn" class="btn btn-primary" disabled>
+          <button type="submit" id="upload-btn" class="btn btn-outline" disabled>
             <span class="btn-text">Upload</span>
             <span class="btn-spinner hidden"></span>
           </button>
@@ -59,7 +61,6 @@
 
         <!-- Selected File Preview Bar -->
         <div id="selected-file-preview" class="file-preview-bar hidden">
-          <span class="file-icon">📄</span>
           <span id="preview-filename" class="preview-filename">filename.txt</span>
           <span id="preview-filesize" class="preview-filesize text-muted">0 KB</span>
           <button type="button" id="clear-file-btn" class="btn-clear" title="Remove selection">✕</button>
@@ -73,9 +74,7 @@
     <section class="panel">
       <div class="panel-header">
         <h3>Stored Files</h3>
-        <button type="button" id="refresh-files-btn" class="btn btn-outline btn-sm" title="Refresh">
-          ↻ Refresh
-        </button>
+        <button type="button" id="refresh-files-btn" class="btn btn-outline btn-sm" title="Refresh">Refresh</button>
       </div>
 
       <div id="file-list-error" class="message error hidden" role="alert"></div>
@@ -128,7 +127,7 @@
         </div>
 
         <div id="update-current-info" class="file-preview-bar">
-          <span class="file-icon" id="update-icon">📄</span>
+          <span id="update-icon" class="hidden"></span>
           <span id="update-current-name" class="preview-filename"></span>
           <span id="update-current-meta" class="preview-filesize text-muted"></span>
         </div>
@@ -162,4 +161,5 @@
 
   <script src="/js/dashboard.js"></script>
 </body>
+
 </html>
